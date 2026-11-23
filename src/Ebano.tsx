@@ -4,7 +4,9 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useGSAP } from '@gsap/react';
 import Lenis from 'lenis';
 import './ebano.css';
-import { BeforeAfter, Barbers, Booking, Drinks, HeroVideo, SERVICES, SoundToggle, snip } from './Extras';
+import { BeforeAfter, Barbers, Booking, Drinks, SERVICES, SoundToggle, Space, snip } from './Extras';
+import { photo } from './store';
+import { useConfig } from './useConfig';
 
 gsap.registerPlugin(ScrollTrigger, useGSAP);
 
@@ -44,6 +46,7 @@ function WaIcon() {
 export default function Ebano() {
   const root = useRef<HTMLDivElement>(null);
   const [modal, setModal] = useState(false);
+  const cfg = useConfig();
   const [open, setOpen] = useState<number | null>(null);
   const [barber, setBarber] = useState<string | null>(null);
   const [demoMsg, setDemoMsg] = useState('');
@@ -170,7 +173,7 @@ export default function Ebano() {
 
       <main>
         <section className="hero" aria-label="Ébano Barbearia">
-          <HeroVideo />
+          <div className="hero__bg" style={{ backgroundImage: `url(${photo(cfg, 'hero')})` }} aria-hidden="true" />
           <div className="hero__glow" aria-hidden="true" />
           <div className="hero__dim" aria-hidden="true"><span className="hero__word s">Ébano</span></div>
           <div className="hero__lit" aria-hidden="true"><span className="hero__word s">Ébano</span></div>
@@ -202,6 +205,7 @@ export default function Ebano() {
           </div>
         </section>
 
+        <Space />
         <BeforeAfter />
 
         <section className="services" id="servicos">

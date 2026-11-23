@@ -1,0 +1,31 @@
+.ad{min-height:100vh;padding:24px clamp(16px,4vw,48px) 60px;max-width:1100px;margin:0 auto;color:#ede4d3}
+.ad h1,.ad h2{font-family:Cormorant,Georgia,serif;font-weight:500}
+.ad-login{max-width:360px;margin:12vh auto;display:grid;gap:16px}
+.ad-login h1{font-size:44px;color:#c9a46a}
+.ad label{display:grid;gap:6px;font-size:14px;color:#cfc4ae}
+.ad input[type=email],.ad input[type=password]{padding:14px;border-radius:12px;border:1px solid #3a3226;background:#16140f;color:#ede4d3;font:inherit}
+.ad-btn{background:#c9a46a;color:#0d0c0a;padding:14px;border-radius:99px;font-weight:700}
+.ad-btn:disabled{opacity:.5}
+.ad-err{color:#ff9b8a}
+.ad-note{color:#8f8572;font-size:14px}
+.ad-top{display:flex;align-items:center;gap:18px;flex-wrap:wrap;padding-bottom:18px;border-bottom:1px solid #2a261e;margin-bottom:24px}
+.ad-top b{font:500 26px Cormorant,serif;color:#c9a46a;margin-right:auto}
+.ad-status{font-size:13px;color:#8f8572}
+.ad-link{color:#c9a46a;text-decoration:underline;text-underline-offset:3px;font-size:14px}
+.ad-card{background:#16140f;border:1px solid #2a261e;border-radius:22px;padding:clamp(18px,3vw,32px);margin-bottom:24px;display:grid;gap:16px}
+.ad-card h2{font-size:36px}
+.ad-row{display:flex;flex-wrap:wrap;gap:8px}
+.ad-chip{padding:10px 16px;border:1px solid #3a3226;border-radius:12px;font-size:14px;text-transform:capitalize}
+.ad-chip.sel{background:#c9a46a;color:#0d0c0a;border-color:#c9a46a;font-weight:700}
+.ad-hours{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:10px}
+.ad-hour{display:grid;gap:2px;padding:16px;border-radius:14px;border:1px solid #2f5a3e;background:#16231a;text-align:left}
+.ad-hour b{font-size:20px}
+.ad-hour span{font-size:12px;color:#8fd3a6}
+.ad-hour.taken{border-color:#6b2a22;background:#2a1512}
+.ad-hour.taken span{color:#ff9b8a}
+.ad-photos{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:14px}
+.ad-photo{position:relative;cursor:pointer;border-radius:14px;overflow:hidden;border:1px solid #3a3226}
+.ad-photo img{width:100%;aspect-ratio:4/5;object-fit:cover;display:block}
+.ad-photo span{position:absolute;left:0;right:0;bottom:0;padding:10px;background:linear-gradient(transparent,rgba(0,0,0,.85));font-size:13px;color:#ede4d3}
+.ad-photo input{position:absolute;inset:0;opacity:0;cursor:pointer}
+.ad-reset{position:absolute;top:8px;right:8px;z-index:2;font-size:11px;background:rgba(0,0,0,.75);color:#ede4d3;padding:5px 9px;border-radius:99px}

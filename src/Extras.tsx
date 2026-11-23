@@ -1,12 +1,9 @@
 import { useEffect, useRef, useState } from 'react';
+import { busyKey, isoDay, photo } from './store';
+import { useConfig } from './useConfig';
 
 /*
- * Peças extras da Ébano. Fotos e vídeo são opcionais: coloque os arquivos em public/
- * com os nomes abaixo e eles aparecem sozinhos. Sem eles, entra um desenho no lugar.
- *   public/video/topo.mp4            vídeo do topo (curto, sem som, até ~4 MB)
- *   public/fotos/antes.jpg            antes do corte
- *   public/fotos/depois.jpg           depois do corte (mesmo enquadramento)
- *   public/fotos/rafa.jpg, dudu.jpg, leo.jpg   retratos dos barbeiros
+ * Peças extras da Ébano.  * As fotos vêm do painel (/admin). Sem foto escolhida, usa as do Unsplash em store.ts.
  */
 
 export const WA_NUMBER = '5521992217782'; // troque pelo WhatsApp da barbearia
@@ -18,12 +15,20 @@ function Photo({ src, alt, className, fallback }: { src: string; alt: string; cl
   return <img src={src} alt={alt} className={className} loading="lazy" decoding="async" onError={() => setOk(false)} />;
 }
 
-/* ---------- Vídeo do topo (opcional) ---------- */
-export function HeroVideo() {
-  const [ok, setOk] = useState(true);
-  if (!ok || matchMedia('(prefers-reduced-motion: reduce)').matches) return null;
+/* ---------- Galeria do espaço ---------- */
+export function Space() {
+  const cfg = useConfig();
+  const slots = ['espaco1', 'espaco2', 'espaco3', 'espaco4'] as const;
+  const alts = ['Salão com as cadeiras e espelhos', 'Luminárias acesas sobre as bancadas', 'Máquinas, tesoura e pente na bancada', 'Cadeira de couro preto'];
   return (
-    <video className="hero__video" src="/video/topo.mp4" autoPlay muted loop playsInline preload="metadata" onError={() => setOk(false)} aria-hidden="true" />
+    <section className="space">
+      <div className="head"><h2 className="h2 s">O espaço</h2><p>Quatro cadeiras, luz baixa e nenhuma pressa.</p></div>
+      <div className="space__grid">
+        {slots.map((s, i) => (
+          <figure key={s} className={`space__f space__f--${i}`}><img src={photo(cfg, s)} alt={alts[i]} loading="lazy" decoding="async" /></figure>
+        ))}
+      </div>
+    </section>
   );
 }
 
@@ -71,6 +76,7 @@ export function SoundToggle() {
 
 /* ---------- Antes e depois arrastável ---------- */
 export function BeforeAfter() {
+  const cfg = useConfig();
   const [pos, setPos] = useState(50);
   const box = useRef<HTMLDivElement>(null);
   const drag = useRef(false);
@@ -92,7 +98,7 @@ export function BeforeAfter() {
   );
   return (
     <section className="ba">
-      <div className="head"><h2 className="h2 s">Antes e depois</h2><p>Arraste a linha. Sem filtro, sem edição.</p></div>
+      <div className="head"><h2 className="h2 s">Antes e depois</h2><p>Arraste a linha. Fotos de exemplo: o dono troca pelas dos clientes no painel.</p></div>
       <div
         className="ba__box"
         ref={box}
@@ -102,8 +108,8 @@ export function BeforeAfter() {
         onPointerCancel={() => (drag.current = false)}
         style={{ '--p': `${pos}%` } as React.CSSProperties}
       >
-        <div className="ba__layer"><Photo src="/fotos/depois.jpg" alt="Depois do corte" className="ba__img" fallback={drawn(true)} /><span className="ba__tag ba__tag--r">Depois</span></div>
-        <div className="ba__layer ba__before"><Photo src="/fotos/antes.jpg" alt="Antes do corte" className="ba__img" fallback={drawn(false)} /><span className="ba__tag">Antes</span></div>
+        <div className="ba__layer"><Photo src={photo(cfg, 'depois')} alt="Depois do corte" className="ba__img" fallback={drawn(true)} /><span className="ba__tag ba__tag--r">Depois</span></div>
+        <div className="ba__layer ba__before"><Photo src={photo(cfg, 'antes')} alt="Antes do corte" className="ba__img" fallback={drawn(false)} /><span className="ba__tag">Antes</span></div>
         <div className="ba__handle" aria-hidden="true"><span>‹ ›</span></div>
         <input
           className="ba__range"
@@ -126,6 +132,7 @@ export const BARBERS = [
   { id: 'leo', n: 'Léo', r: 'Tesoura e cortes clássicos', y: '12 anos de cadeira' },
 ];
 export function Barbers({ onPick }: { onPick: (id: string) => void }) {
+  const cfg = useConfig();
   return (
     <section className="crew" id="barbeiros">
       <div className="head"><h2 className="h2 s">Quem corta</h2><p>Escolha pelo estilo ou pela conversa.</p></div>
@@ -133,7 +140,7 @@ export function Barbers({ onPick }: { onPick: (id: string) => void }) {
         {BARBERS.map((b) => (
           <article className="barber" key={b.id} onPointerEnter={snip}>
             <div className="barber__ph">
-              <Photo src={`/fotos/${b.id}.jpg`} alt={`Retrato de ${b.n}`} className="barber__img" fallback={<span className="barber__mono s">{b.n[0]}</span>} />
+              <Photo src={photo(cfg, b.id as 'rafa')} alt={`Retrato de ${b.n}`} className="barber__img" fallback={<span className="barber__mono s">{b.n[0]}</span>} />
             </div>
             <h3 className="s">{b.n}</h3>
             <p>{b.r}</p>
@@ -154,26 +161,27 @@ export const SERVICES = [
   { n: 'Camuflagem de grisalhos', p: 'Tom natural, sem efeito tinta, em 20 minutos.', v: 'R$ 80', min: 30 },
   { n: 'Limpeza de pele', p: 'Esfoliação, vapor e máscara de argila.', v: 'R$ 110', min: 45 },
 ];
-const HOURS = ['10:00', '11:00', '13:00', '14:30', '16:00', '17:30', '19:00', '20:00'];
+export const HOURS = ['10:00', '11:00', '13:00', '14:30', '16:00', '17:30', '19:00', '20:00'];
 
-function nextDays() {
+export function nextDays(n = 6) {
   const out: Date[] = [];
   const d = new Date();
-  while (out.length < 6) {
+  while (out.length < n) {
     d.setDate(d.getDate() + 1);
     if (d.getDay() !== 0 && d.getDay() !== 1) out.push(new Date(d)); // fecha domingo e segunda
   }
   return out;
 }
-const fmt = (d: Date) => d.toLocaleDateString('pt-BR', { weekday: 'short', day: '2-digit' }).replace('.', '');
+export const fmt = (d: Date) => d.toLocaleDateString('pt-BR', { weekday: 'short', day: '2-digit' }).replace('.', '');
 
 export function Booking({ barber, setBarber, onDemo }: { barber: string | null; setBarber: (b: string | null) => void; onDemo: (msg: string) => void }) {
   const [svc, setSvc] = useState<number | null>(null);
   const [day, setDay] = useState<number | null>(null);
   const [hour, setHour] = useState<string | null>(null);
   const days = useRef(nextDays()).current;
-  // horários "ocupados" fixos por dia, só para parecer real
-  const busy = (d: number, h: string) => (d * 7 + h.charCodeAt(1) + h.length) % 4 === 0;
+  const cfg = useConfig();
+  // horários marcados como ocupados no painel
+  const busy = (d: number, h: string) => !!barber && (cfg.busy[busyKey(barber, isoDay(days[d]))] ?? []).includes(h);
   useEffect(() => setHour(null), [day, barber]);
 
   const step = svc === null ? 1 : barber === null ? 2 : day === null || hour === null ? 3 : 4;
