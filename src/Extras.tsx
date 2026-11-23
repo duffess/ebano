@@ -12,7 +12,7 @@ export const WA_NUMBER = '5521992217782'; // troque pelo WhatsApp da barbearia
 function Photo({ src, alt, className, fallback }: { src: string; alt: string; className?: string; fallback: React.ReactNode }) {
   const [ok, setOk] = useState(true);
   if (!ok) return <>{fallback}</>;
-  return <img src={src} alt={alt} className={className} loading="lazy" decoding="async" onError={() => setOk(false)} />;
+  return <img src={src} alt={alt} className={className} loading="lazy" decoding="async" onError={() => setOk(false)} draggable={false} />;
 }
 
 /* ---------- Galeria do espaço ---------- */
@@ -102,7 +102,7 @@ export function BeforeAfter() {
       <div
         className="ba__box"
         ref={box}
-        onPointerDown={(e) => { drag.current = true; (e.target as Element).setPointerCapture?.(e.pointerId); move(e.clientX); }}
+        onPointerDown={(e) => { e.preventDefault(); drag.current = true; (e.target as Element).setPointerCapture?.(e.pointerId); move(e.clientX); }}
         onPointerMove={(e) => drag.current && move(e.clientX)}
         onPointerUp={() => (drag.current = false)}
         onPointerCancel={() => (drag.current = false)}

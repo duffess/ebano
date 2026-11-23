@@ -221,3 +221,8 @@ ul{list-style:none}svg,img{display:block}
 .space__f--3{grid-column:2/4}
 @media (max-width:760px){.space__grid{grid-template-columns:1fr 1fr;grid-template-rows:auto}.space__f{aspect-ratio:1}.space__f--0{grid-column:1/-1;grid-row:auto;aspect-ratio:4/3}.space__f--3{grid-column:1/-1;aspect-ratio:16/9}}
 .ba__img{filter:grayscale(.2) sepia(.15)}
+
+/* Arrastar o antes e depois sem selecionar a imagem */
+.ba__box,.ba__box *{-webkit-user-select:none;user-select:none;-webkit-user-drag:none}
+.ba__layer{pointer-events:none}
+.ba__box{cursor:ew-resize}
