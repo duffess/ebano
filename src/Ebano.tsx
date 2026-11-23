@@ -177,7 +177,7 @@ export default function Ebano() {
           <div className="hero__dim" aria-hidden="true"><span className="hero__word s">Ébano</span></div>
           <div className="hero__lit" aria-hidden="true"><span className="hero__word s">Ébano</span></div>
           <h1 className="hero__copy">
-            <span className="hero__meta">BARBEARIA · JARDINS · DESDE 2009</span>
+            <span className="hero__meta">BARBEARIA · BARRA DA TIJUCA · DESDE 2009</span>
             <span className="hero__sub">O corte é só o começo do ritual.</span>
             <a href="#agendar" className="btn" onClick={openWa}><WaIcon />Reservar horário</a>
           </h1>
@@ -228,9 +228,8 @@ export default function Ebano() {
           <p>Reserve pelo WhatsApp. Chegou antes? O espresso é por nossa conta.</p>
           <a href="#" className="btn" onClick={openWa}><WaIcon />Reservar no WhatsApp</a>
           <div className="info">
-            <div><h4>Endereço</h4><p>Alameda das Acácias, 450<br />Jardins</p></div>
+            <div><h4>Endereço</h4><p>Alameda das Acácias, 450<br />Barra da Tijuca</p></div>
             <div><h4>Horário</h4><p>Ter a sex, 10h às 21h<br />Sáb, 9h às 18h</p></div>
-            <div><h4>Estacionamento</h4><p>Manobrista na porta<br />de quinta a sábado</p></div>
           </div>
           <p className="big s" aria-hidden="true">Ébano</p>
         </section>
