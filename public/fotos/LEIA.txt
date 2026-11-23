@@ -1,0 +1,4 @@
+Coloque aqui as fotos (JPG):
+  antes.jpg e depois.jpg  -> antes e depois (mesmo enquadramento)
+  rafa.jpg, dudu.jpg, leo.jpg -> retratos dos barbeiros (de preferência 4:5)
+Sem os arquivos, o site mostra um desenho no lugar.

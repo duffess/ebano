@@ -4,6 +4,7 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useGSAP } from '@gsap/react';
 import Lenis from 'lenis';
 import './ebano.css';
+import { BeforeAfter, Barbers, Booking, Drinks, HeroVideo, SERVICES, SoundToggle, snip } from './Extras';
 
 gsap.registerPlugin(ScrollTrigger, useGSAP);
 
@@ -28,14 +29,6 @@ const STYLES = [
   { n: 'Mullet', d: 'Curto na frente, longo atrás', hair: 'M27 64c0-20 10-32 23-32s23 12 23 32v34c-3-10-3-20-3-30-6-6-12-8-20-8s-14 2-20 8c0 10 0 20-3 30Z' },
 ];
 
-const SERVICES = [
-  { n: 'Corte assinado', p: 'Conversa, lavagem, corte na tesoura ou máquina e finalização com pomada.', v: 'R$ 90' },
-  { n: 'Barba de navalha', p: 'Toalha quente, óleo pré-barba, navalha e loção calmante.', v: 'R$ 70' },
-  { n: 'Corte + barba', p: 'O ritual completo, com uma dose de whisky ou um espresso.', v: 'R$ 150' },
-  { n: 'Camuflagem de grisalhos', p: 'Tom natural, sem efeito tinta, em 20 minutos.', v: 'R$ 80' },
-  { n: 'Limpeza de pele', p: 'Esfoliação, vapor e máscara de argila.', v: 'R$ 110' },
-];
-
 const MANIFESTO =
   'Aqui ninguém tem pressa. Você senta, a toalha quente chega, o espresso vem na xícara de louça e o corte só termina quando ficar do jeito que você imaginou.';
 const GOLD = new Set(['toalha', 'quente,', 'espresso', 'imaginou.']);
@@ -52,6 +45,8 @@ export default function Ebano() {
   const root = useRef<HTMLDivElement>(null);
   const [modal, setModal] = useState(false);
   const [open, setOpen] = useState<number | null>(null);
+  const [barber, setBarber] = useState<string | null>(null);
+  const [demoMsg, setDemoMsg] = useState('');
 
   useEffect(() => {
     const k = (e: KeyboardEvent) => e.key === 'Escape' && setModal(false);
@@ -155,7 +150,9 @@ export default function Ebano() {
     { scope: root },
   );
 
-  const openWa = (e: React.MouseEvent) => { e.preventDefault(); setModal(true); };
+  const openWa = (e: React.MouseEvent) => { e.preventDefault(); setDemoMsg(''); setModal(true); };
+  const goBook = (e?: React.MouseEvent) => { e?.preventDefault(); document.getElementById('agendar')?.scrollIntoView({ behavior: 'smooth' }); };
+  const pickBarber = (id: string) => { setBarber(id); goBook(); };
 
   return (
     <div ref={root}>
@@ -168,18 +165,19 @@ export default function Ebano() {
 
       <header className="top">
         <b>ÉBANO</b>
-        <nav><a href="#estilos">Estilos</a><a href="#servicos">Serviços</a><a href="#clube">Clube</a><a href="#agendar" className="pill" onClick={openWa}>Agendar</a></nav>
+        <nav><a href="#estilos">Estilos</a><a href="#servicos">Serviços</a><a href="#barbeiros">Barbeiros</a><SoundToggle /><a href="#agendar" className="pill" onClick={goBook}>Agendar</a></nav>
       </header>
 
       <main>
         <section className="hero" aria-label="Ébano Barbearia">
+          <HeroVideo />
           <div className="hero__glow" aria-hidden="true" />
           <div className="hero__dim" aria-hidden="true"><span className="hero__word s">Ébano</span></div>
           <div className="hero__lit" aria-hidden="true"><span className="hero__word s">Ébano</span></div>
           <h1 className="hero__copy">
             <span className="hero__meta">BARBEARIA · BARRA DA TIJUCA · DESDE 2009</span>
             <span className="hero__sub">O corte é só o começo do ritual.</span>
-            <a href="#agendar" className="btn" onClick={openWa}><WaIcon />Reservar horário</a>
+            <a href="#agendar" className="btn" onClick={goBook}><WaIcon />Reservar horário</a>
           </h1>
           <span className="scroll" aria-hidden="true" />
         </section>
@@ -193,7 +191,7 @@ export default function Ebano() {
             <div className="head"><h2 className="h2 s">Estilos</h2><p>Os cortes que mais saem da cadeira. Não achou o seu? Traz a foto.</p></div>
             <div className="ring"><div className="ring__in">
               {STYLES.map((s, i) => (
-                <article className="style" key={s.n}>
+                <article className="style" key={s.n} onPointerEnter={snip}>
                   <span className="style__n">0{i + 1}</span>
                   <svg viewBox="0 0 100 110" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden="true"><path d={FACE} /><path d={s.hair} fill="currentColor" fillOpacity=".18" /></svg>
                   <div><h3 className="s">{s.n}</h3><small>{s.d}</small></div>
@@ -204,16 +202,21 @@ export default function Ebano() {
           </div>
         </section>
 
+        <BeforeAfter />
+
         <section className="services" id="servicos">
           <div className="head" style={{ padding: 0 }}><h2 className="h2 s">Serviços</h2><p>Preço fechado. Bebida da casa em todos.</p></div>
           <ul className="list">
             {SERVICES.map((s, i) => (
               <li key={s.n} className={`item ${open === i ? 'open' : ''}`} onClick={() => setOpen(open === i ? null : i)}>
-                <span className="item__n">0{i + 1}</span><h3 className="s">{s.n}</h3><b>{s.v}</b><p>{s.p}</p>
+                <span className="item__n">0{i + 1}</span><h3 className="s">{s.n}</h3><b>{s.v}</b><p>{s.p} {s.min} min.</p>
               </li>
             ))}
           </ul>
         </section>
+
+        <Barbers onPick={pickBarber} />
+        <Drinks />
 
         <section className="club" id="clube">
           <div>
@@ -223,10 +226,12 @@ export default function Ebano() {
           <div className="price"><b>R$ 189</b><span>por mês, cancela quando quiser</span><br /><a href="#agendar" className="btn" onClick={openWa}>Quero entrar</a></div>
         </section>
 
-        <section className="book" id="agendar">
+        <Booking barber={barber} setBarber={setBarber} onDemo={(m) => { setDemoMsg(m); setModal(true); }} />
+
+        <section className="book">
           <h2 className="h2 s">Sua cadeira <br />está pronta.</h2>
           <p>Reserve pelo WhatsApp. Chegou antes? O espresso é por nossa conta.</p>
-          <a href="#" className="btn" onClick={openWa}><WaIcon />Reservar no WhatsApp</a>
+          <a href="#agendar" className="btn" onClick={goBook}><WaIcon />Reservar agora</a>
           <div className="info">
             <div><h4>Endereço</h4><p>Alameda das Acácias, 450<br />Barra da Tijuca</p></div>
             <div><h4>Horário</h4><p>Ter a sex, 10h às 21h<br />Sáb, 9h às 18h</p></div>
@@ -243,6 +248,7 @@ export default function Ebano() {
       <div className={`modal ${modal ? 'open' : ''}`} role="dialog" aria-modal="true" aria-labelledby="mt" onClick={(e) => e.target === e.currentTarget && setModal(false)}>
         <div className="modal__box">
           <h3 className="s" id="mt">Aqui abriria o WhatsApp da barbearia</h3>
+          {demoMsg && <blockquote className="demo-msg">{demoMsg}</blockquote>}
           <p>Este é um site de demonstração da LYSS. No site da sua barbearia, esse botão leva o cliente direto para o seu WhatsApp, com a mensagem pronta.</p>
           <a className="btn" href={LYSS_WA} target="_blank" rel="noopener noreferrer">Quero um site assim</a>
           <button className="x" type="button" onClick={() => setModal(false)}>Continuar vendo</button>
